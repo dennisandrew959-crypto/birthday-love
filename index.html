@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Happy Birthday ✨</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Caveat:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Ambient botanical & sparkle background -->
+  <div class="ambient-bg" aria-hidden="true">
+    <div class="ambient-orb orb-green-1"></div>
+    <div class="ambient-orb orb-green-2"></div>
+    <div class="ambient-orb orb-purple-1"></div>
+    <div class="ambient-orb orb-purple-2"></div>
+    <div id="floating-petals" class="floating-petals"></div>
+  </div>
+
+  <!-- Celebration particle canvas -->
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+  <!-- Minimal top bar (progress & sound) -->
+  <header class="top-bar">
+    <div class="progress-pills" aria-label="Surprise progress">
+      <span class="progress-pill is-active" data-step="1" title="Page 1: Gift Box">
+        <span class="pill-dot"></span>
+        <span class="pill-label">Gift</span>
+      </span>
+      <span class="pill-connector"></span>
+      <span class="progress-pill" data-step="2" title="Page 2: Memories & Treats">
+        <span class="pill-dot"></span>
+        <span class="pill-label">Memories</span>
+      </span>
+      <span class="pill-connector"></span>
+      <span class="progress-pill" data-step="3" title="Page 3: Cake & Letter">
+        <span class="pill-dot"></span>
+        <span class="pill-label">Wish</span>
+      </span>
+    </div>
+
+    <div class="top-controls">
+      <button id="music-toggle" class="sound-toggle music-toggle" type="button" aria-label="Play or pause birthday song" title="Play or pause song">
+        <span class="music-bars" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+        <span class="sound-text" id="music-text">Play Song</span>
+      </button>
+
+      <button id="sound-toggle" class="sound-toggle" type="button" aria-label="Toggle sound effects" title="Toggle sound">
+        <span class="sound-icon" id="sound-icon">🔊</span>
+        <span class="sound-text" id="sound-text">Sound On</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- =========================================================
+       PAGE 1: GIFT BOX WITH PULLABLE RIBBON
+       ========================================================= -->
+  <main id="app">
+    <section id="page-1" class="page is-active" aria-label="Birthday Gift Box">
+      <div class="page-inner page-1-inner">
+        <span class="eyebrow-badge" id="p1-tag">Special Delivery</span>
+        <h1 class="hero-title" id="p1-headline">A little birthday surprise awaits you</h1>
+        <p class="hero-subtitle" id="p1-subtext">Pull the lavender ribbon down to untie your gift</p>
+
+        <div class="gift-stage">
+          <div class="gift-glow" aria-hidden="true"></div>
+
+          <div class="gift-box" id="gift-box">
+            <!-- Lid & Bow -->
+            <div class="gift-lid" id="gift-lid">
+              <div class="lid-ribbon-v"></div>
+              <div class="gift-bow" id="gift-bow">
+                <span class="bow-loop bow-left"></span>
+                <span class="bow-loop bow-right"></span>
+                <span class="bow-knot"></span>
+              </div>
+            </div>
+
+            <!-- Box Body -->
+            <div class="gift-body">
+              <div class="box-ribbon-v"></div>
+              <div class="box-ribbon-h"></div>
+              <div class="box-tag">
+                <span>For You</span>
+                <small id="gift-box-name">My Love</small>
+              </div>
+              <div class="box-inner-glow"></div>
+            </div>
+
+            <!-- Pullable Ribbon Handle -->
+            <div
+              class="ribbon-pull-zone"
+              id="ribbon-pull-handle"
+              role="slider"
+              tabindex="0"
+              aria-label="Pull the ribbon downward to open the gift box"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="0"
+            >
+              <div class="ribbon-tail tail-left"></div>
+              <div class="ribbon-tail tail-right"></div>
+              <div class="pull-tab" id="pull-tab">
+                <span class="pull-tab-icon">🎀</span>
+                <span class="pull-tab-label" id="p1-pull-hint">Pull me down ↓</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pull-meter-wrap" aria-hidden="true">
+            <div class="pull-meter-track">
+              <div class="pull-meter-fill" id="pull-meter-fill"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         PAGE 2: 4 PICTURES OF US + RANDOM GIFTS + HOLD & SWIPE
+         ========================================================= -->
+    <section id="page-2" class="page" aria-label="Memories and Birthday Gifts">
+      <div class="page-inner page-2-inner">
+        <header class="section-hero">
+          <span class="eyebrow-badge">Happy Birthday, <span id="p2-gf-name">My Favorite Person</span> 💚💜</span>
+          <h1 class="section-title" id="p2-gallery-heading">Four Little Moments I Adore</h1>
+          <p class="section-subtitle" id="p2-gallery-subheading">Tap any polaroid to flip &amp; read a secret note</p>
+        </header>
+
+        <!-- 4 Pictures Grid -->
+        <div class="photo-grid" id="photo-grid"></div>
+
+        <!-- Random Little Snapshots (tap to open each picture) -->
+        <section class="random-pics-section" aria-label="Random Snapshots">
+          <div class="gifts-header">
+            <span class="eyebrow-badge">Surprise Gallery</span>
+            <h2 class="section-title-sm" id="p2-random-pics-heading">Random Little Snapshots</h2>
+            <p class="section-subtitle" id="p2-random-pics-subheading">
+              Every picture is hidden — tap any card to open and see what's inside!
+            </p>
+          </div>
+
+          <div class="random-pics-toolbar">
+            <button type="button" class="ghost-btn" id="draw-random-photo-btn">
+              ✨ Open a Random Snapshot
+            </button>
+            <span class="random-pics-counter" id="random-pics-counter">0 / 12 opened</span>
+          </div>
+
+          <div class="random-photos-grid" id="random-photos-grid"></div>
+        </section>
+
+        <!-- Hold & Swipe Button to Page 3 -->
+        <section class="swipe-cta-section" aria-label="Continue to Birthday Cake">
+          <p class="swipe-instruction">Ready for your birthday cake &amp; wish?</p>
+          <div class="hold-swipe-track" id="swipe-track" role="button" tabindex="0" aria-label="Hold and slide right to go to the birthday cake">
+            <div class="swipe-fill" id="swipe-fill"></div>
+            <span class="swipe-label" id="swipe-label">Hold &amp; slide to light your cake</span>
+            <div class="swipe-thumb" id="swipe-thumb">
+              <svg class="hold-ring" viewBox="0 0 48 48" aria-hidden="true">
+                <circle class="hold-ring-bg" cx="24" cy="24" r="20"></circle>
+                <circle class="hold-ring-progress" id="hold-ring-progress" cx="24" cy="24" r="20"></circle>
+              </svg>
+              <span class="swipe-arrow">→</span>
+            </div>
+          </div>
+          <p class="swipe-feedback" id="swipe-feedback" aria-live="polite">Press &amp; hold the button, then slide right</p>
+        </section>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         PAGE 3: BIRTHDAY CAKE (TAP-TAP-TAP FLAME) + TOP PAPER LETTER
+         ========================================================= -->
+    <section id="page-3" class="page" aria-label="Birthday Cake and Letter">
+      <!-- Top Floating Paper Note (drops down after candle is blown out) -->
+      <div class="floating-paper-wrap" id="floating-paper-wrap" aria-hidden="true">
+        <div
+          class="floating-paper-btn"
+          id="open-paper-btn"
+          role="slider"
+          tabindex="0"
+          aria-label="Hold and pull down to open your birthday letter"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+        >
+          <span class="paper-string" aria-hidden="true"></span>
+          <div class="paper-envelope-card" id="paper-envelope-card">
+            <span class="paper-wax-seal" aria-hidden="true">
+              <svg class="paper-hold-ring" viewBox="0 0 48 48" aria-hidden="true">
+                <circle class="paper-hold-ring-bg" cx="24" cy="24" r="20"></circle>
+                <circle class="paper-hold-ring-progress" id="paper-hold-ring-progress" cx="24" cy="24" r="20"></circle>
+              </svg>
+              <span>💚</span>
+            </span>
+            <span class="paper-copy">
+              <strong id="paper-prompt-text">A letter drifted down for you</strong>
+              <small id="paper-subprompt-text">Hold &amp; pull down ↓ to open</small>
+            </span>
+            <span class="paper-pull-arrow" aria-hidden="true">↓</span>
+            <span class="paper-pull-bar" aria-hidden="true">
+              <span class="paper-pull-bar-fill" id="paper-pull-bar-fill"></span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-inner page-3-inner">
+        <header class="cake-header">
+          <span class="eyebrow-badge eyebrow-purple">Birthday Wish</span>
+          <h1 class="section-title" id="p3-heading">Make a Birthday Wish</h1>
+          <p class="section-subtitle" id="p3-subtext">Tap, tap, tap the candle flame to blow it out!</p>
+        </header>
+
+        <!-- Blow Meter -->
+        <div class="blow-meter-card" id="blow-meter-card">
+          <div class="blow-meter-info">
+            <span id="blow-status-text">💨 Tap the flame!</span>
+            <span id="blow-count-text">0 / 6</span>
+          </div>
+          <div class="blow-bar">
+            <div class="blow-bar-fill" id="blow-bar-fill"></div>
+          </div>
+        </div>
+
+        <!-- Cake Stage -->
+        <div class="cake-stage" id="cake-stage">
+          <div class="cake-aura" id="cake-aura" aria-hidden="true"></div>
+
+          <!-- Candle & Interactive Flame -->
+          <div class="candle-unit" id="candle-unit">
+            <div class="smoke-container" id="smoke-container" aria-hidden="true">
+              <span class="smoke-wisp wisp-1"></span>
+              <span class="smoke-wisp wisp-2"></span>
+              <span class="smoke-wisp wisp-3"></span>
+            </div>
+
+            <button
+              type="button"
+              class="flame-hit-area"
+              id="flame-btn"
+              aria-label="Tap repeatedly to blow out the birthday candle flame"
+            >
+              <span class="flame-halo" id="flame-halo"></span>
+              <span class="flame-outer" id="flame-outer">
+                <span class="flame-inner"></span>
+              </span>
+              <span class="tap-ripple-ring" id="tap-ripple-ring"></span>
+            </button>
+
+            <div class="candle-wick"></div>
+            <div class="candle-body">
+              <div class="candle-stripe"></div>
+            </div>
+          </div>
+
+          <!-- Matcha & Lavender Layered Cake -->
+          <div class="cake-illustration" aria-hidden="true">
+            <!-- Top Tier -->
+            <div class="cake-tier tier-top">
+              <div class="frosting-top frosting-lavender"></div>
+              <div class="drip drip-1"></div>
+              <div class="drip drip-2"></div>
+              <div class="drip drip-3"></div>
+              <div class="drip drip-4"></div>
+              <div class="cake-sprinkles">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <div class="cake-berries">
+                <span class="berry b1"></span>
+                <span class="berry b2"></span>
+                <span class="berry b3"></span>
+              </div>
+            </div>
+
+            <!-- Bottom Tier -->
+            <div class="cake-tier tier-bottom">
+              <div class="frosting-top frosting-emerald"></div>
+              <div class="drip-green dg-1"></div>
+              <div class="drip-green dg-2"></div>
+              <div class="drip-green dg-3"></div>
+              <div class="drip-green dg-4"></div>
+              <div class="drip-green dg-5"></div>
+              <div class="cake-garland">
+                <span>🌿</span><span>💜</span><span>🌿</span><span>💜</span><span>🌿</span>
+              </div>
+            </div>
+
+            <!-- Cake Stand -->
+            <div class="cake-plate"></div>
+            <div class="cake-stand-neck"></div>
+            <div class="cake-stand-base"></div>
+          </div>
+        </div>
+
+        <div class="page-3-actions">
+          <button type="button" class="ghost-btn" id="back-to-p2-btn">← Back to Memories</button>
+          <button type="button" class="ghost-btn is-hidden" id="relight-btn">🕯️ Relight Candle</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================================================
+       UNFOLDED PAPER LETTER MODAL
+       ========================================================= -->
+  <div class="letter-modal" id="letter-modal" role="dialog" aria-modal="true" aria-labelledby="letter-salutation" aria-hidden="true">
+    <div class="letter-backdrop" id="letter-backdrop"></div>
+    <article class="letter-sheet" id="letter-sheet">
+      <button type="button" class="letter-close-btn" id="letter-close-btn" aria-label="Close letter">✕</button>
+
+      <div class="letter-botanical-top" aria-hidden="true">🌿 💜 ✨ 💜 🌿</div>
+
+      <div class="letter-meta-row">
+        <button type="button" class="sound-toggle music-toggle letter-music-btn" id="letter-music-btn" aria-label="Pause or play letter song">
+          <span class="music-bars" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </span>
+          <span class="sound-text" id="letter-music-text">A Thousand Miles</span>
+        </button>
+
+        <div class="letter-stamp">
+          <span class="stamp-circle" id="letter-stamp-text">Made With Love</span>
+        </div>
+      </div>
+
+      <h2 class="letter-salutation" id="letter-salutation">Dearest Love,</h2>
+      <div class="letter-body" id="letter-body"></div>
+
+      <p class="letter-closing" id="letter-closing"></p>
+      <p class="letter-signature" id="letter-signature"></p>
+
+      <div class="letter-footer-actions">
+        <button type="button" class="celebrate-again-btn" id="celebrate-again-btn">
+          ✨ Shower More Confetti
+        </button>
+      </div>
+    </article>
+  </div>
+
+  <!-- =========================================================
+       PHOTO LIGHTBOX MODAL (Opens when she taps a picture)
+       ========================================================= -->
+  <div class="photo-lightbox" id="photo-lightbox" role="dialog" aria-modal="true" aria-labelledby="lightbox-caption" aria-hidden="true">
+    <div class="lightbox-backdrop" id="lightbox-backdrop"></div>
+    <figure class="lightbox-card">
+      <button type="button" class="letter-close-btn lightbox-close" id="lightbox-close-btn" aria-label="Close photo">✕</button>
+      <div class="lightbox-img-wrap">
+        <img id="lightbox-img" src="" alt="" />
+      </div>
+      <figcaption class="lightbox-meta">
+        <span class="reveal-badge" id="lightbox-tag">Memory</span>
+        <h3 class="lightbox-caption" id="lightbox-caption">Our Favorite Laugh</h3>
+        <p class="lightbox-note" id="lightbox-note"></p>
+      </figcaption>
+    </figure>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="audio.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
